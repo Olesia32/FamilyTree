@@ -63,21 +63,6 @@ MainWindowPresenter >> initializeWindow: arg1 [
 ]
 
 { #category : 'as yet unclassified' }
-MainWindowPresenter >> openEditPersonPresenter: arg1 [
-
-	| tmp1 tmp3 |
-	tmp1 := application newPresenter: EditPersonPresenter.
-	tmp1 person: arg1.
-	tmp1 := tmp1 open.
-	tmp3 := tmp1 window.
-	tmp3
-		beUnresizeable;
-		removeExpandBox;
-		removeCollapseBox;
-		removeMenuBox
-]
-
-{ #category : 'as yet unclassified' }
 MainWindowPresenter >> redraw: arg1 [
 
 	tree layout: arg1.

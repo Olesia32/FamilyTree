@@ -82,9 +82,7 @@ Person >> fatherId [
 { #category : 'accessing' }
 Person >> fatherId: arg1 [
 
-	| tmp1 |
-	tmp1 := arg1.
-	'<an unprintable nonliteral value>' runtimeUndeclaredWrite: tmp1
+	fatherId := arg1 
 ]
 
 { #category : 'accessing' }

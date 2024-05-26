@@ -6,26 +6,36 @@ Class {
 		'name',
 		'yearsOfLife',
 		'personPhoto',
-		'go'
+		'go',
+		'type'
 	],
 	#category : 'FamilyTree',
 	#package : 'FamilyTree'
 }
 
 { #category : 'initialization' }
-Card >> connectPresenters [ 
-go action: [ owner redrawTree: (person id) ]
+Card >> connectPresenters [
+
+	go action: [ owner redrawTree: person id ]
 ]
 
 { #category : 'layout' }
 Card >> defaultLayout [
 
-	^ SpGridLayout new
-		  add: name at: 1 @ 1;
-		  add: yearsOfLife at: 1 @ 2;
-		  add: go at: 1 @ 3;
-		  add: personPhoto at: 2 @ 1 span: 1 @ 3;
-		  yourself
+	| tmp2 |
+	tmp2 := SpGridLayout new.
+	tmp2
+		add: name at: 1 @ 1;
+		add: yearsOfLife at: 1 @ 2;
+		add: go at: 1 @ 3;
+		add: personPhoto at: 2 @ 1 span: 1 @ 3.
+	^ tmp2 yourself
+]
+
+{ #category : 'accessing' }
+Card >> id [
+
+	^ person id
 ]
 
 { #category : 'initialization' }
@@ -45,7 +55,7 @@ Card >> initializeStyles [
 	name addStyle: 'smallTitle'.
 	yearsOfLife addStyle: 'h4'.
 	personPhoto addStyle: 'photo'.
-	go addStyle: 'goButtonStyle'.
+	go addStyle: 'goButtonStyle'
 ]
 
 { #category : 'accessing' }
@@ -74,4 +84,14 @@ Card >> person: arg1 [
 	tmp1 := tmp1 scaledToSize: 50 @ 70.
 	personPhoto image: tmp1.
 	^ self defaultLayout
+]
+
+{ #category : 'accessing' }
+Card >> type [ 
+^ type
+]
+
+{ #category : 'accessing' }
+Card >> type: aType [
+type := aType 
 ]

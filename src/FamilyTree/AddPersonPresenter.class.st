@@ -5,7 +5,8 @@ Class {
 		'deathDate',
 		'deathPlace',
 		'photo',
-		'photoButton'
+		'photoButton',
+		'person'
 	],
 	#category : 'FamilyTree',
 	#package : 'FamilyTree'
@@ -14,21 +15,44 @@ Class {
 { #category : 'initialization' }
 AddPersonPresenter >> connectPresenters [
 
+	submit action: [
+		(firstName text isNotEmpty and: [ lastName text isNotEmpty ])
+			ifTrue: [
+				| gender |
+				gender := male state
+					          ifTrue: [ 'male' ]
+					          ifFalse: [ 'female' ].
+				person := Person new.
+				person := person
+					          firstName: firstName text;
+					          lastName: lastName text;
+					          birthDate: birthDate date;
+					          birthPlace: birthPlace text;
+					          deathDate: deathDate date;
+					          deathPlace: deathPlace text;
+					          gender: gender.
+
+				self window close ]
+			ifFalse: [
+				errorLabel
+					label: 'Заповніть усі необхідні поля';
+					show ] ].
 	photoButton action: [
-		|fileDialogWindow path image|
-		fileDialogWindow := FileDialogWindow new.
-		fileDialogWindow open.
-		fileDialogWindow action: [  path := fileDialogWindow selectedPathName].
-		path ifNotNil: [  
-		image := Form fromFileNamed: path.
-	image := image scaledToSize: 70 @ 100.
-	photo image: image. ]]
+		| tmp1 tmp2 tmp4 |
+		tmp1 := FileDialogWindow new.
+		tmp1
+			open;
+			action: [ tmp4 := tmp1 selectedPathName ].
+		tmp4 ifNotNil: [
+			tmp2 := Form fromFileNamed: tmp4.
+			tmp2 := tmp2 scaledToSize: 70 @ 100.
+			photo image: tmp2 ] ]
 ]
 
 { #category : 'layout' }
 AddPersonPresenter >> defaultLayout [
 
-	| tmp1 tmp2 tmp3|
+	| tmp1 tmp2 tmp3 tmp5 |
 	tmp1 := SpBoxLayout newVertical.
 	tmp1 vAlignCenter.
 	tmp2 := SpGridLayout new.
@@ -60,6 +84,11 @@ AddPersonPresenter >> defaultLayout [
 		arg1
 			height: 350;
 			expand: false ].
+	tmp5 := SpBoxLayout newLeftToRight.
+	tmp5
+		hAlignCenter;
+		add: submit expand: false.
+	tmp1 add: tmp5 yourself expand: false.
 	^ tmp1 yourself
 ]
 
@@ -81,7 +110,7 @@ AddPersonPresenter >> initializeStyles [
 	super initializeStyles.
 	deathDate addStyle: 'lightGray'.
 	deathPlace addStyle: 'lightGray'.
-	photoButton addStyle: 'buttonGreenStyle'.
+	photoButton addStyle: 'buttonGreenStyle'
 ]
 
 { #category : 'initialization' }
@@ -90,4 +119,14 @@ AddPersonPresenter >> initializeWindow: arg1 [
 	arg1
 		title: 'Додати особу';
 		initialExtent: 450 @ 500
+]
+
+{ #category : 'accessing' }
+AddPersonPresenter >> person [
+^ person
+]
+
+{ #category : 'accessing' }
+AddPersonPresenter >> person: aPerson [
+person := aPerson 
 ]
