@@ -10,7 +10,8 @@ Class {
 }
 
 { #category : 'initialization' }
-RegisterPresenter >> connectPresenters [ 
+RegisterPresenter >> connectPresenters [
+
 	submit action: [
 		(login text isEmpty or: [
 			 password text isEmpty or: [
@@ -18,14 +19,18 @@ RegisterPresenter >> connectPresenters [
 			ifFalse: [
 				(application repository getUserByLogin: login text)
 					ifNil: [
-						| mainPersonId treeId person tree |
+						| mainPersonId treeId person tree gender |
 						person := Person new.
 						tree := Tree new.
+						gender := male state
+							          ifTrue: [ 'male' ]
+							          ifFalse: [ 'female' ].
 						person
 							firstName: firstName text;
 							lastName: lastName text;
 							birthDate: birthDate date;
-							birthPlace: birthPlace text.
+							birthPlace: birthPlace text;
+							gender: gender.
 						tree userId: login text.
 						application repository addUser: (User new
 								 login: login text;
@@ -33,8 +38,9 @@ RegisterPresenter >> connectPresenters [
 						treeId := application repository addTree: tree.
 						mainPersonId := application repository addPerson:
 							                (person tree: treeId).
+						tree := tree mainPerson: mainPersonId.
 						application repository updateTree:
-							(tree mainPerson: mainPersonId).
+							(tree).
 						application openMainPresenter: treeId ]
 					ifNotNil: [
 						errorLabel

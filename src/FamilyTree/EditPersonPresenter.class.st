@@ -14,13 +14,19 @@ EditPersonPresenter >> connectPresenters [
 	submit action: [
 		(firstName text isNotEmpty and: [ lastName text isNotEmpty ])
 			ifTrue: [
-				person
+				| gender |
+				gender := male state
+					          ifTrue: [ 'male' ]
+					          ifFalse: [ 'female' ].
+				person := person
 					firstName: firstName text;
 					lastName: lastName text;
 					birthDate: birthDate date;
 					birthPlace: birthPlace text;
 					deathDate: deathDate date;
-					deathPlace: deathPlace text.
+					deathPlace: deathPlace text;
+					gender: gender.
+
 				application repository updatePerson: person ]
 			ifFalse: [
 				errorLabel

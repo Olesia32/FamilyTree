@@ -1,106 +1,101 @@
 Class {
 	#name : 'FocusCard',
-	#superclass : 'SpPresenter',
+	#superclass : 'Card',
 	#instVars : [
-		'person',
-		'name',
-		'yearsOfLife',
 		'birthDate',
 		'birthPlace',
 		'deathDate',
 		'deathPlace',
-		'personPhoto',
-		'delete'
+		'delete',
+		'update'
 	],
 	#category : 'FamilyTree',
 	#package : 'FamilyTree'
 }
 
+{ #category : 'initialization' }
+FocusCard >> connectPresenters [
+
+	delete action: [ owner deletePerson: person ].
+	update action: [ owner updatePerson: person ]
+]
+
 { #category : 'layout' }
 FocusCard >> defaultLayout [
 
-	^ SpGridLayout new
-						           add: name at: 1 @ 1 span: 2 @ 1;
-						           add: yearsOfLife at: 1 @ 2 span: 2 @ 1;
-								     add: 'Дата народження:' at: 1 @ 3;
-								     add: birthDate at: 2 @ 3;
-								     add: 'Місце народження:' at: 1 @ 4;
-								     add: birthPlace at: 2 @ 4;
-								     add: 'Дата смерті:' at: 1 @ 5;
-								     add: deathDate at: 2 @ 5;
-								     add: 'Місце смерті:' at: 1 @ 6;
-								     add: deathPlace at: 2 @ 6;
-								     add: delete at: 1 @ 7 span: 2 @ 1;
-								     add: personPhoto at: 3 @ 1 span: 1 @ 7;
-								     yourself
-]
-
-{ #category : 'initialization' }
-FocusCard >> initialize [
-super initialize.
-person := Person new.
-self addStyle: 'green'.
+	| tmp1 |
+	tmp1 := SpGridLayout new.
+	tmp1
+		add: name at: 1 @ 1 span: 2 @ 1;
+		add: yearsOfLife at: 1 @ 2 span: 2 @ 1;
+		add: 'Дата народження:' at: 1 @ 3;
+		add: birthDate at: 2 @ 3;
+		add: 'Місце народження:' at: 1 @ 4;
+		add: birthPlace at: 2 @ 4;
+		add: 'Дата смерті:' at: 1 @ 5;
+		add: deathDate at: 2 @ 5;
+		add: 'Місце смерті:' at: 1 @ 6;
+		add: deathPlace at: 2 @ 6;
+		add: delete at: 1 @ 7;
+		add: update at: 2 @ 7;
+		add: personPhoto at: 3 @ 1 span: 1 @ 7.
+	^ tmp1 yourself
 ]
 
 { #category : 'initialization' }
 FocusCard >> initializePresenters [
 
-	name := self newLabel.
-	yearsOfLife := self newLabel.
+	super initializePresenters.
 	birthDate := self newLabel.
 	birthPlace := self newLabel.
 	deathDate := self newLabel.
 	deathPlace := self newLabel.
-	personPhoto := self newImage.
-	delete := self newButton
-		          color: Color green;
-		          label: 'Видалити'.
+	delete := self newButton label: 'Видалити'.
+	delete addStyle: 'buttonGreenStyle'.
+	update := self newButton label: 'Редагувати'.
+	update addStyle: 'buttonGreenStyle'.
 	self initializeStyles
 ]
 
 { #category : 'initialization' }
 FocusCard >> initializeStyles [
 
-	name addStyle: 'title'.
-	yearsOfLife addStyle: 'h4'.
-	birthDate addStyle: 'p'.
-	birthPlace addStyle: 'p'.
-	deathDate addStyle: 'p'.
-	deathPlace addStyle: 'p'.
-	personPhoto addStyle: 'photo'.
-	delete addStyle: 'buttonStyle'
+	self addStyle: 'green'.
+	name
+		removeStyle: 'smallTitle';
+		addStyle: 'title'
 ]
 
 { #category : 'accessing' }
-FocusCard >> person: aPerson [
+FocusCard >> person: arg1 [
 
-	| image |
-	person := aPerson.
+	| tmp1 |
+	person := arg1.
 	name label: person fullName.
 	yearsOfLife label: person yearsOfLife.
 	person birthDate
-		ifNotNil: [ birthDate label: person birthDate asString]
-		ifNil: [ birthDate label: 'Невідомо' ].
+		ifNil: [ birthDate label: 'Невідомо' ]
+		ifNotNil: [ birthDate label: person birthDate asString ].
 	person birthPlace
-		ifNotNil: [ birthPlace label: person birthPlace ]
-		ifNil: [ birthPlace label: 'Невідомо' ].
+		ifNil: [ birthPlace label: 'Невідомо' ]
+		ifNotNil: [ birthPlace label: person birthPlace ].
 	person deathDate
-		ifNotNil: [ deathDate label: person deathDate asString ]
-		ifNil: [ deathDate label: 'Невідомо' ].
+		ifNil: [ deathDate label: 'Невідомо' ]
+		ifNotNil: [ deathDate label: person deathDate asString ].
 	person deathPlace
-		ifNotNil: [ deathPlace label: person deathPlace ]
-		ifNil: [ deathPlace label: 'Невідомо' ].
+		ifNil: [ deathPlace label: 'Невідомо' ]
+		ifNotNil: [ deathPlace label: person deathPlace ].
 	person mainPhoto
-		ifNotNil: [ image := Form fromFileNamed: person mainPhoto ]
 		ifNil: [
-			image := person gender = 'male'
-				         ifTrue: [
-					         Form fromFileNamed:
-						         'C:\Users\olesy\OneDrive\Документи\GitHub\ProgramEngineeringProject-\FamilyTree\FamilyTree.WPF\Images\man.png' ]
-				         ifFalse: [
-					         Form fromFileNamed:
-						         'C:\Users\olesy\OneDrive\Документи\GitHub\ProgramEngineeringProject-\FamilyTree\FamilyTree.WPF\Images\woman.png' ] ].
-	image := image scaledToSize: 70 @ 100.
-	personPhoto image: image.
+			tmp1 := person gender = 'male'
+				        ifTrue: [
+					        Form fromFileNamed:
+						        'C:\Users\olesy\OneDrive\Документи\GitHub\ProgramEngineeringProject-\FamilyTree\FamilyTree.WPF\Images\man.png' ]
+				        ifFalse: [
+					        Form fromFileNamed:
+						        'C:\Users\olesy\OneDrive\Документи\GitHub\ProgramEngineeringProject-\FamilyTree\FamilyTree.WPF\Images\woman.png' ] ]
+		ifNotNil: [ tmp1 := Form fromFileNamed: person mainPhoto ].
+	tmp1 := tmp1 scaledToSize: 70 @ 100.
+	personPhoto image: tmp1.
 	^ self defaultLayout
 ]

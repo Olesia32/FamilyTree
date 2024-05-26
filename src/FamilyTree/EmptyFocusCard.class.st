@@ -1,9 +1,6 @@
 Class {
 	#name : 'EmptyFocusCard',
-	#superclass : 'SpPresenter',
-	#instVars : [
-		'addButton'
-	],
+	#superclass : 'EmptyCard',
 	#category : 'FamilyTree',
 	#package : 'FamilyTree'
 }
@@ -19,6 +16,11 @@ yourself
 
 { #category : 'initialization' }
 EmptyFocusCard >> initializePresenters [
-   self addStyle: 'green'.
-	addButton := self newButton label: 'Додати'
+
+	super initializePresenters.
+	self removeStyle: 'yellow'.
+	self addStyle: 'green'.
+	addButton removeStyle: 'addButtonYellowStyle'.
+	addButton addStyle: 'addButtonGreenStyle'.
+	addButton icon: ((self iconNamed: #add) scaledToSize: 50 @ 50)
 ]

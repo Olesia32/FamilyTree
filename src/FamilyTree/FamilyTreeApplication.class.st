@@ -30,28 +30,18 @@ FamilyTreeApplication >> openAddPersonPresenter [
 ]
 
 { #category : 'as yet unclassified' }
-FamilyTreeApplication >> openEditPersonPresenter [
-
-	| window |
-	window := (self newPresenter: EditPersonPresenter) open.
-	window window
-		beUnresizeable;
-		removeExpandBox;
-		removeCollapseBox;
-		removeMenuBox
-]
-
-{ #category : 'as yet unclassified' }
 FamilyTreeApplication >> openEditPersonPresenter: aPerson [
 
 	| window |
-	window := (self newPresenter: EditPersonPresenter) open.
-	window presenter person: aPerson.
+	window := self newPresenter: EditPersonPresenter.
+	window person: aPerson.
+	window := window openDialog.
 	window window
 		beUnresizeable;
 		removeExpandBox;
 		removeCollapseBox;
-		removeMenuBox
+		removeMenuBox.
+	window okAction: [ window windows at: 1 updatePerson ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -69,9 +59,9 @@ FamilyTreeApplication >> openLoginPresenter [
 FamilyTreeApplication >> openMainPresenter: aTree [
 
 	| window |
-	window := self newPresenter: FamilyTreePresenter.
-	window treeId: (repository getTreeById: aTree ) mainPerson.
-	window open.
+	window := self newPresenter: MainWindowPresenter.
+	window treeId: aTree .
+	window := window open.
 	window window
 		beUnresizeable;
 		removeExpandBox;

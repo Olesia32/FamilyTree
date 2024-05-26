@@ -22,5 +22,9 @@ EmptyCard >> defaultLayout [
 EmptyCard >> initializePresenters [
 
 	self addStyle: 'yellow'.
-	addButton := self newButton label: 'Додати'
+	addButton := self newButton
+		             borderWidth: 0;
+		             icon: ((self iconNamed: #add) scaledToSize: 20 @ 20);
+		             yourself.
+	addButton addStyle: 'addButtonYellowStyle'
 ]

@@ -90,14 +90,17 @@ FamilyTreeDescriptorSystem >> descriptorForPerson: aDescriptor [
 		from: #mainPhoto
 		to: (table fieldNamed: 'mainPhoto').
 	(aDescriptor newMapping: DirectMapping)
-		from: #fatherId 
+		from: #fatherId
 		to: (table fieldNamed: 'fatherId').
 	(aDescriptor newMapping: DirectMapping)
-		from: #motherId 
+		from: #motherId
 		to: (table fieldNamed: 'motherId').
 	(aDescriptor newMapping: DirectMapping)
 		from: #spouseId
-		to: (table fieldNamed: 'spouseId')
+		to: (table fieldNamed: 'spouseId').
+	(aDescriptor newMapping: DirectMapping)
+		from: #tree
+		to: (table fieldNamed: 'tree')
 ]
 
 { #category : 'as yet unclassified' }

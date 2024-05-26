@@ -42,15 +42,16 @@ currentSession createTables
 
 { #category : 'as yet unclassified' }
 FamilyTreeRepository >> deletePerson: aPerson [
-currentSession inUnitOfWorkDo: [ currentSession delete: aPerson ]
+
+	currentSession inUnitOfWorkDo: [ currentSession delete: aPerson ].
+	self initialize 
 ]
 
 { #category : 'as yet unclassified' }
 FamilyTreeRepository >> deleteUser: aUser [
-currentSession inUnitOfWorkDo: [
 
-	currentSession delete: aUser 
-	].
+	currentSession inUnitOfWorkDo: [ currentSession delete: aUser ].
+	self initialize.
 ]
 
 { #category : 'as yet unclassified' }
@@ -67,7 +68,16 @@ FamilyTreeRepository >> getAllRelations [
 
 { #category : 'as yet unclassified' }
 FamilyTreeRepository >> getChildrenForPerson: aPersonId [
-^ currentSession read: Person where: [ :each | each fatherId = aPersonId or: [ each motherId = aPersonId ] ]
+
+	| first second|
+	first := currentSession
+		         read: Person
+		         where: [ :each | each fatherId = aPersonId ].
+	second := currentSession
+		 read: Person
+		 where: [ :each | each motherId = aPersonId ].
+	first := first, second.
+	^ first
 ]
 
 { #category : 'as yet unclassified' }

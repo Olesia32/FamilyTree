@@ -28,7 +28,7 @@ AddPersonPresenter >> connectPresenters [
 { #category : 'layout' }
 AddPersonPresenter >> defaultLayout [
 
-	| tmp1 tmp2 tmp3 tmp4 |
+	| tmp1 tmp2 tmp3|
 	tmp1 := SpBoxLayout newVertical.
 	tmp1 vAlignCenter.
 	tmp2 := SpGridLayout new.
@@ -60,12 +60,6 @@ AddPersonPresenter >> defaultLayout [
 		arg1
 			height: 350;
 			expand: false ].
-	tmp4 := SpBoxLayout newLeftToRight.
-	tmp4
-		hAlignCenter;
-		spacing: 20;
-		add: submit expand: false.
-	tmp1 add: tmp4 yourself expand: false.
 	^ tmp1 yourself
 ]
 

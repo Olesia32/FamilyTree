@@ -16,6 +16,31 @@ Class {
 	#package : 'FamilyTree'
 }
 
+{ #category : 'adding' }
+FamilyTreePresenter >> addApplication [
+
+	maleFocus application: self application.
+	maleFocus owner: self.
+	femaleFocus application: self application.
+	femaleFocus owner: self.
+	maleFather application: self application.
+	maleFather owner: self.
+	maleMother application: self application.
+	maleMother owner: self.
+	femaleFather application: self application.
+	femaleFather owner: self.
+	femaleMother application: self application.
+	femaleMother owner: self.
+	childrenPanel allPresenters do: [ :child |
+		child application: self application.
+		child owner: self ]
+]
+
+{ #category : 'initialization' }
+FamilyTreePresenter >> connectPresenters [ 
+(maleFather class = Card) ifTrue: [ maleFather adapter widget on: #mouseUp send: #handleMouseUp to: self. ]
+]
+
 { #category : 'layout' }
 FamilyTreePresenter >> defaultLayout [
 
@@ -41,13 +66,10 @@ FamilyTreePresenter >> defaultLayout [
 						   expand: false ];
 				   add: (SpBoxLayout newLeftToRight
 						    hAlignCenter;
-						    spacing: 20;
+						    spacing: 150;
 						    add: maleFocus expand: false;
-						    add: (self newMorph morph: (Morph new
-										      color: Color black;
-										      height: 1;
-										      width: 100))
-						    expand: false;
+						    
+						    add: femaleFocus expand: false;
 						    yourself)
 				   expand: false fill: false;
 				   add: childrenPanel withConstraints: [ :constr |
@@ -58,20 +80,43 @@ FamilyTreePresenter >> defaultLayout [
 		  yourself
 ]
 
+{ #category : 'as yet unclassified' }
+FamilyTreePresenter >> deletePerson: aPerson [
+
+	| dialog mainPerson |
+	mainPerson := (application repository getTreeById: aPerson tree)
+		              mainPerson.
+	mainPerson = aPerson id ifTrue: [ ^ self ].
+	dialog := UIManager default confirm:
+		          'Ви впевнені, що хочете видалити?'.
+	dialog ifFalse: [ ^ self ].
+	application repository deletePerson: aPerson.
+	self redrawTree: mainPerson
+]
+
+{ #category : 'events - processing' }
+FamilyTreePresenter >> handleMouseUp: anEvent [
+
+	Transcript
+		show: 'Натиснуто на Morph!';
+		cr
+]
+
 { #category : 'initialization' }
 FamilyTreePresenter >> initialize [ 
 super initialize 
 ]
 
 { #category : 'initialization' }
-FamilyTreePresenter >> initializePresenters [ 
-self addStyle: 'white'.
+FamilyTreePresenter >> initializePresenters [
+
+	self addStyle: 'white'.
 ]
 
 { #category : 'as yet unclassified' }
 FamilyTreePresenter >> redrawTree: aFocusPersonId [
 
-	| focusPerson spouse focusFather focusMother spouseFather spouseMother children |
+	| focusPerson spouse focusFather focusMother spouseFather spouseMother |
 	aFocusPersonId ifNotNil: [
 		focusPerson := application repository getPersonById: aFocusPersonId.
 		focusPerson spouseId ifNotNil: [
@@ -92,53 +137,94 @@ FamilyTreePresenter >> redrawTree: aFocusPersonId [
 					                spouse motherId ] ].
 		focusPerson gender = 'male'
 			ifTrue: [
-				maleFocus := FocusCard new person: focusPerson.
+				maleFocus := FocusCard new.
+				maleFocus person: focusPerson.
 				focusFather
-					ifNotNil: [ maleFather := Card new person: focusFather ]
-					ifNil: [ maleFather := EmptyCard ].
-				focusMother
-					ifNotNil: [ maleMother := Card new person: focusMother ]
-					ifNil: [ maleMother := EmptyCard ].
-				spouse
 					ifNotNil: [
-						femaleFocus := FocusCard new person: spouse.
-						femaleFather := spouseFather
-							                ifNotNil: [ Card new person: spouseFather ]
-							                ifNil: [ EmptyCard ].
-						femaleMother := spouseMother
-							                ifNotNil: [ Card new person: spouseMother ]
-							                ifNil: [ EmptyCard ] ]
+						maleFather := Card new.
+						maleFather person: focusFather ]
 					ifNil: [
-						femaleFocus := EmptyFocusCard.
-						femaleFather := EmptyCard.
-						femaleMother := EmptyCard ] ]
-			ifFalse: [
-				femaleFocus := FocusCard new person: focusPerson.
-				femaleFather := focusFather
-					                ifNotNil: [ Card new person: focusFather ]
-					                ifNil: [ EmptyCard ].
+						maleFather := EmptyCard new.
+						maleFather ].
 				focusMother
-					ifNotNil: [ femaleMother := Card new person: focusMother ]
-					ifNil: [ femaleMother := EmptyCard ].
+					ifNotNil: [
+						maleMother := Card new.
+						maleMother person: focusMother ]
+					ifNil: [
+						maleMother := EmptyCard new.
+						maleMother ].
 				spouse
 					ifNotNil: [
-						maleFocus := FocusCard new person: spouse.
+						femaleFocus := FocusCard new.
+						femaleFocus person: spouse.
 						spouseFather
-							ifNotNil: [ maleFather := Card new person: spouseFather ]
-							ifNil: [ maleFather := EmptyCard ].
-						maleMother := spouseMother
-							              ifNotNil: [ Card new person: spouseMother ]
-							              ifNil: [ EmptyCard ] ]
+							ifNotNil: [
+								femaleFather := Card new.
+								femaleFather person: spouseFather ]
+							ifNil: [ femaleFather := EmptyCard new ].
+						spouseMother
+							ifNotNil: [
+								femaleMother := Card new.
+								femaleMother person: spouseFather ]
+							ifNil: [ femaleMother := EmptyCard new ] ]
 					ifNil: [
-						maleFocus := EmptyFocusCard.
-						maleFather := EmptyCard.
-						maleMother := EmptyCard ] ].
-		
-
-		^ self defaultLayout ]
+						femaleFocus := EmptyFocusCard new.
+						femaleFather := EmptyCard new.
+						femaleMother := EmptyCard new ] ]
+			ifFalse: [
+				femaleFocus := FocusCard new.
+				femaleFocus person: focusPerson.
+				focusFather
+					ifNotNil: [
+						femaleFather := Card new.
+						femaleFather person: focusFather ]
+					ifNil: [ femaleFather := EmptyCard new ].
+				focusMother
+					ifNotNil: [
+						femaleMother := Card new.
+						femaleMother person: focusMother ]
+					ifNil: [ femaleMother := EmptyCard new ].
+				spouse
+					ifNotNil: [
+						maleFocus := FocusCard new.
+						maleFocus person: spouse.
+						spouseFather
+							ifNotNil: [
+								maleFather := Card new.
+								maleFather person: spouseFather ]
+							ifNil: [ maleFather := EmptyCard new.].
+						spouseMother
+							ifNotNil: [
+								maleMother := Card new.
+								maleMother person: spouseMother ]
+							ifNil: [ maleMother := EmptyCard new.] ]
+					ifNil: [
+						maleFocus := EmptyFocusCard new.
+						maleFather := EmptyCard new.
+						maleMother := EmptyCard new ] ].
+		children := application repository getChildrenForPerson:
+			            aFocusPersonId.
+		childrenPanel := SpBoxLayout newLeftToRight
+			                 hAlignCenter;
+			                 spacing: 40;
+			                 yourself.
+		children do: [ :child |
+			| card |
+			card := Card new.
+			card person: child.
+			childrenPanel add: card expand: false ].
+		childrenPanel add: EmptyCard new.
+		owner redraw: self defaultLayout ]
 ]
 
 { #category : 'accessing' }
 FamilyTreePresenter >> treeId: id [
-self redrawTree: id
+   mainPersonId := id.
+	self redrawTree: id
+]
+
+{ #category : 'as yet unclassified' }
+FamilyTreePresenter >> updatePerson: aPerson [
+
+	owner openEditPersonPresenter: aPerson 
 ]
