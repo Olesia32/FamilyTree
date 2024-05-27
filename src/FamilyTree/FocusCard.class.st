@@ -72,19 +72,20 @@ FocusCard >> person: arg1 [
 	| tmp1 |
 	person := arg1.
 	name label: person fullName.
+	name help: person fullName.
 	yearsOfLife label: person yearsOfLife.
 	person birthDate
 		ifNil: [ birthDate label: 'Невідомо' ]
-		ifNotNil: [ birthDate label: person birthDate asString ].
+		ifNotNil: [ birthDate label: person birthDate asString; help:  person birthDate asString].
 	person birthPlace
 		ifNil: [ birthPlace label: 'Невідомо' ]
-		ifNotNil: [ birthPlace label: person birthPlace ].
+		ifNotNil: [ birthPlace label: person birthPlace; help: person birthPlace ].
 	person deathDate
 		ifNil: [ deathDate label: 'Невідомо' ]
-		ifNotNil: [ deathDate label: person deathDate asString ].
+		ifNotNil: [ deathDate label: person deathDate asString; help: person deathDate asString ].
 	person deathPlace
 		ifNil: [ deathPlace label: 'Невідомо' ]
-		ifNotNil: [ deathPlace label: person deathPlace ].
+		ifNotNil: [ deathPlace label: person deathPlace; help: person deathPlace].
 	person mainPhoto
 		ifNil: [
 			tmp1 := person gender = 'male'

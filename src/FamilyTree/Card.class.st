@@ -69,7 +69,7 @@ Card >> person: arg1 [
 
 	| tmp1 |
 	person := arg1.
-	name label: person fullName.
+	name label: person fullName; help: person fullName.
 	yearsOfLife label: person yearsOfLife.
 	person mainPhoto
 		ifNil: [

@@ -44,7 +44,10 @@ FamilyTreePresenter >> addPerson: aType [
 	dialog := dialog open whenClosedDo: [
 		          | person personId |
 		          person := dialog presenter person.
-		          person := person tree: (application repository getPersonById: mainPersonId ) tree.
+		          person ifNotNil: [  
+		          person := person tree:
+			                    (application repository getPersonById:
+				                     mainPersonId) tree.].
 		          person ifNotNil: [
 			          aType = 'maleFocus' ifTrue: [
 				          person := person
@@ -54,7 +57,8 @@ FamilyTreePresenter >> addPerson: aType [
 				          personId := application repository addPerson: person.
 				          femaleFocus ifNotNil: [
 					          | spouse |
-					          spouse := application repository getPersonById: femaleFocus id.
+					          spouse := application repository getPersonById:
+						                    femaleFocus id.
 					          spouse := spouse spouseId: personId ].
 				          children do: [ :child |
 					          | updatedChild |
@@ -68,7 +72,8 @@ FamilyTreePresenter >> addPerson: aType [
 				          personId := application repository addPerson: person.
 				          maleFocus ifNotNil: [
 					          | spouse |
-					          spouse := application repository getPersonById: maleFocus id.
+					          spouse := application repository getPersonById:
+						                    maleFocus id.
 					          spouse := spouse spouseId: personId ].
 				          children do: [ :child |
 					          | updatedChild |

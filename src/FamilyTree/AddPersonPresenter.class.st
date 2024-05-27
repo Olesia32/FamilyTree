@@ -42,13 +42,9 @@ AddPersonPresenter >> connectPresenters [
     
     "Створюємо новий екземпляр FileDialogWindow"
     fileDialog := FileDialogWindow new.
-    
-    "Відкриваємо діалогове вікно"
-    fileDialog open.
-    
-    "Отримуємо шлях до вибраного файлу"
-    selectedPath := fileDialog selectedPathName.
-    self halt.
+    fileDialog openModal.
+    fileDialog okAction: [ 
+	selectedPath := fileDialog selectedPathName.
     selectedPath ifNotNil: [
         "Отримуємо розширення файлу"
         fileExtension := selectedPath findTokens: '.' last.
@@ -62,9 +58,11 @@ AddPersonPresenter >> connectPresenters [
             fileContent := fileContent scaledToSize: 70 @ 100.
             "Встановлюємо зображення у компонент photo"
             photo image: fileContent
-        ])
-    ].
-].
+        ])].
+    fileDialog open.
+    
+    "Отримуємо шлях до вибраного файлу"
+    ].]
 ]
 
 { #category : 'layout' }
