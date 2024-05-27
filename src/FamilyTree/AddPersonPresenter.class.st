@@ -38,15 +38,33 @@ AddPersonPresenter >> connectPresenters [
 					label: 'Заповніть усі необхідні поля';
 					show ] ].
 	photoButton action: [
-		| tmp1 tmp2 tmp4 |
-		tmp1 := FileDialogWindow new.
-		tmp1
-			open;
-			action: [ tmp4 := tmp1 selectedPathName ].
-		tmp4 ifNotNil: [
-			tmp2 := Form fromFileNamed: tmp4.
-			tmp2 := tmp2 scaledToSize: 70 @ 100.
-			photo image: tmp2 ] ]
+    | fileDialog selectedPath fileContent fileExtension |
+    
+    "Створюємо новий екземпляр FileDialogWindow"
+    fileDialog := FileDialogWindow new.
+    
+    "Відкриваємо діалогове вікно"
+    fileDialog open.
+    
+    "Отримуємо шлях до вибраного файлу"
+    selectedPath := fileDialog selectedPathName.
+    self halt.
+    selectedPath ifNotNil: [
+        "Отримуємо розширення файлу"
+        fileExtension := selectedPath findTokens: '.' last.
+        
+        "Перевіряємо, чи є файл зображенням"
+        ((#('jpg' 'jpeg' 'png' 'gif' 'bmp') includes: fileExtension) ifTrue: [
+            "Завантажуємо зображення з файлу"
+            fileContent := Form fromFileNamed: selectedPath.
+            
+            "Масштабуємо зображення до потрібного розміру"
+            fileContent := fileContent scaledToSize: 70 @ 100.
+            "Встановлюємо зображення у компонент photo"
+            photo image: fileContent
+        ])
+    ].
+].
 ]
 
 { #category : 'layout' }
